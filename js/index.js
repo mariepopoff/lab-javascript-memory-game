@@ -1,3 +1,5 @@
+
+
 const cards = [
   { name: 'aquaman', img: 'aquaman.jpg' },
   { name: 'batman', img: 'batman.jpg' },
@@ -27,6 +29,10 @@ const cards = [
 
 const memoryGame = new MemoryGame(cards);
 
+let cardsClicked = [];
+let result;
+let firstCardClicked;
+
 window.addEventListener('load', (event) => {
   let html = '';
   memoryGame.cards.forEach((pic) => {
@@ -46,6 +52,27 @@ window.addEventListener('load', (event) => {
     card.addEventListener('click', () => {
       // TODO: write some code here
       console.log(`Card clicked: ${card}`);
+      card.classList.toggle("turned");
+      cardsClicked.push(card.dataset.cardName);
+      if (cardsClicked.length ===1) {
+        firstCardClicked = card;
+      }
+      if (cardsClicked.length === 2) {
+        result = memoryGame.checkIfPair(cardsClicked[0], cardsClicked[1]);
+        if (result) {
+          card.classList.add("blocked");
+          if (memoryGame.checkIfFinished()) window.alert ("Yon won");
+        } else {
+          const timeoutID = setTimeout(() => {
+            card.classList.toggle("turned");
+            firstCardClicked.classList.toggle("turned");
+          }, 1000);
+        };
+        cardsClicked = [];
+        
+      };
+
+
     });
   });
 });
